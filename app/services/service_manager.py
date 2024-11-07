@@ -32,7 +32,7 @@ class ServiceManager:
             method = getattr(service_instance, method_name, None)
             if method:
                 try:
-                    return method(**kwargs)  # Utilisation de **kwargs ici
+                    return method(**kwargs)
                 except TypeError as e:
                     print(f"Erreur d'argument pour {method_name}: {e}")
                     return {"error": str(e)}
