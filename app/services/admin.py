@@ -8,19 +8,18 @@ class AdminService:
         load_dotenv()
         self.auth_service = auth_service or AuthentificationService()
         self.base_url = os.getenv("BASE_URL")
-        print("AdminService initialisé")
 
     def is_multi_user_mode(self, token):
         """
         GET /v1/admin/is-multi-user-mode
         Vérifie si l'instance est en mode multi-utilisateur.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/admin/is-multi-user-mode"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
 
         try:
             response = requests.get(url, headers=headers)
@@ -34,12 +33,12 @@ class AdminService:
         GET /v1/admin/users
         Récupère la liste de tous les utilisateurs en mode multi-utilisateur.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/admin/users"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
 
         try:
             response = requests.get(url, headers=headers)
@@ -53,12 +52,12 @@ class AdminService:
         POST /v1/admin/users/new
         Crée un nouvel utilisateur avec un nom d'utilisateur, un mot de passe et un rôle.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/admin/users/new"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
         data = {
             "username": username,
             "password": password,
@@ -77,12 +76,12 @@ class AdminService:
         POST /v1/admin/users/{id}
         Met à jour les informations d'un utilisateur spécifique.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/admin/users/{user_id}"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
         data = {k: v for k, v in {
             "username": username,
             "password": password,
@@ -102,12 +101,12 @@ class AdminService:
         DELETE /v1/admin/users/{id}
         Supprime un utilisateur par son identifiant.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/admin/users/{user_id}"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
 
         try:
             response = requests.delete(url, headers=headers)
@@ -121,12 +120,12 @@ class AdminService:
         GET /v1/admin/invites
         Liste toutes les invitations existantes.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/admin/invites"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
 
         try:
             response = requests.get(url, headers=headers)
@@ -140,12 +139,12 @@ class AdminService:
         POST /v1/admin/invite/new
         Crée une nouvelle invitation pour enregistrer un utilisateur dans l'instance.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/admin/invite/new"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
         data = {
             "workspaceIds": workspace_ids
         }
@@ -162,12 +161,12 @@ class AdminService:
         DELETE /v1/admin/invite/{id}
         Désactive une invitation par son identifiant.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/admin/invite/{invite_id}"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
 
         try:
             response = requests.delete(url, headers=headers)

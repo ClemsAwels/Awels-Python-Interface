@@ -8,14 +8,13 @@ class WorkspaceThreadService:
         load_dotenv()
         self.auth_service = auth_service or AuthentificationService()
         self.base_url = os.getenv("BASE_URL")
-        print("WorkspaceThreadService initialisé")
 
     def create_thread(self, slug, user_id, token):
         """
         POST /v1/workspace/{slug}/thread/new
         Crée un nouveau thread dans l'espace de travail.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
@@ -38,7 +37,7 @@ class WorkspaceThreadService:
         POST /v1/workspace/{slug}/thread/{threadSlug}/update
         Met à jour le nom d'un thread dans un espace de travail.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
@@ -61,12 +60,12 @@ class WorkspaceThreadService:
         DELETE /v1/workspace/{slug}/thread/{threadSlug}
         Supprime un thread d'un espace de travail.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/workspace/{slug}/thread/{thread_slug}"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
 
         try:
             response = requests.delete(url, headers=headers)
@@ -80,12 +79,12 @@ class WorkspaceThreadService:
         GET /v1/workspace/{slug}/thread/{threadSlug}/chats
         Récupère les chats d'un thread dans un espace de travail.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/workspace/{slug}/thread/{thread_slug}/chats"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
 
         try:
             response = requests.get(url, headers=headers)
@@ -99,7 +98,7 @@ class WorkspaceThreadService:
         POST /v1/workspace/{slug}/thread/{threadSlug}/chat
         Envoie un message pour converser avec un thread dans un espace de travail.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
@@ -126,7 +125,7 @@ class WorkspaceThreadService:
         POST /v1/workspace/{slug}/thread/{threadSlug}/stream-chat
         Envoie un message en mode chat en continu avec un thread dans un espace de travail.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 

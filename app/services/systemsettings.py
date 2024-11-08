@@ -8,19 +8,18 @@ class SystemSettingsService:
         load_dotenv()
         self.auth_service = auth_service or AuthentificationService()
         self.base_url = os.getenv("BASE_URL")
-        print("SystemSettingsService initialisé")
-
+        
     def dump_settings(self, token):
         """
         GET /v1/system/env-dump
         Exporte tous les paramètres actuels vers un fichier de stockage.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/system/env-dump"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
 
         try:
             response = requests.get(url, headers=headers)
@@ -34,12 +33,12 @@ class SystemSettingsService:
         GET /v1/system
         Récupère tous les paramètres système actuellement définis.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/system"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
 
         try:
             response = requests.get(url, headers=headers)
@@ -53,12 +52,12 @@ class SystemSettingsService:
         GET /v1/system/vector-count
         Retourne le nombre de vecteurs dans la base de données de vecteurs connectée.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/system/vector-count"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
 
         try:
             response = requests.get(url, headers=headers)
@@ -72,7 +71,7 @@ class SystemSettingsService:
         POST /v1/system/update-env
         Met à jour un paramètre ou une préférence du système.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
@@ -94,12 +93,12 @@ class SystemSettingsService:
         GET /v1/system/export-chats
         Exporte toutes les conversations du système dans un format spécifique.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/system/export-chats"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
         params = {"type": export_type}
 
         try:
@@ -114,7 +113,7 @@ class SystemSettingsService:
         DELETE /v1/system/remove-documents
         Supprime définitivement des documents spécifiques du système.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 

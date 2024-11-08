@@ -8,14 +8,13 @@ class WorkspaceService:
         load_dotenv()
         self.auth_service = auth_service or AuthentificationService()
         self.base_url = os.getenv("BASE_URL")
-        print("WorkspaceService initialized")
 
     def create_workspace(self, name, token):
         """
         POST /v1/workspace/new
         Create a new workspace with the specified name.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
@@ -35,12 +34,12 @@ class WorkspaceService:
         GET /v1/workspaces
         List all current workspaces.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/workspaces"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
 
         try:
             response = requests.get(url, headers=headers)
@@ -54,12 +53,12 @@ class WorkspaceService:
         GET /v1/workspace/{slug}
         Retrieve a workspace by its unique slug.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/workspace/{slug}"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
 
         try:
             response = requests.get(url, headers=headers)
@@ -73,12 +72,12 @@ class WorkspaceService:
         DELETE /v1/workspace/{slug}
         Delete a workspace by its unique slug.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/workspace/{slug}"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
 
         try:
             response = requests.delete(url, headers=headers)
@@ -92,7 +91,7 @@ class WorkspaceService:
         POST /v1/workspace/{slug}/update
         Update a workspace's settings by its unique slug.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
@@ -111,12 +110,12 @@ class WorkspaceService:
         GET /v1/workspace/{slug}/chats
         Retrieve chats associated with a specific workspace slug.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/workspace/{slug}/chats"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
 
         try:
             response = requests.get(url, headers=headers)
@@ -130,7 +129,7 @@ class WorkspaceService:
         POST /v1/workspace/{slug}/update-embeddings
         Update embeddings by adding or removing documents for a workspace.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
@@ -149,7 +148,7 @@ class WorkspaceService:
         POST /v1/workspace/{slug}/update-pin
         Update pin status for a document in the workspace.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
@@ -168,7 +167,7 @@ class WorkspaceService:
         POST /v1/workspace/{slug}/chat
         Execute a chat with the specified workspace.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
@@ -187,7 +186,7 @@ class WorkspaceService:
         POST /v1/workspace/{slug}/stream-chat
         Execute a streamable chat with the specified workspace.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 

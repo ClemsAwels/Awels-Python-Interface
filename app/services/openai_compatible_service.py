@@ -8,19 +8,18 @@ class OpenAICompatibleService:
         load_dotenv()
         self.auth_service = auth_service or AuthentificationService()
         self.base_url = os.getenv("BASE_URL")
-        print("OpenAICompatibleService initialisé")
 
     def list_models(self, token):
         """
         GET /v1/openai/models
         Récupère tous les modèles disponibles (workspaces pour le chat).
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/openai/models"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
 
         try:
             response = requests.get(url, headers=headers)
@@ -34,7 +33,7 @@ class OpenAICompatibleService:
         POST /v1/openai/chat/completions
         Exécute une conversation avec un workspace en mode compatibilité OpenAI.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
@@ -59,7 +58,7 @@ class OpenAICompatibleService:
         POST /v1/openai/embeddings
         Obtenir les embeddings d'un ou plusieurs textes.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
@@ -79,12 +78,12 @@ class OpenAICompatibleService:
         GET /v1/openai/vector_stores
         Liste toutes les collections de bases de données vectorielles connectées.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/openai/vector_stores"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
 
         try:
             response = requests.get(url, headers=headers)

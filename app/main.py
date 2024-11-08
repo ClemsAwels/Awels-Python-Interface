@@ -1,31 +1,28 @@
-from flask import current_app as app, request, jsonify
-from .services.service_manager import ServiceManager
+from services import *
+import os
+from dotenv import load_dotenv
 
-# Initialisation de ServiceManager
-manager = ServiceManager()
+load_dotenv()
 
-@app.route('/execute', methods=['POST'])
-def execute():
-    # Récupération des données JSON envoyées avec la requête POST
-    data = request.json
-    if not data or 'method' not in data:
-        return jsonify({"error": "Le champ 'method' est requis"}), 400
+token = os.getenv("TOKEN")
 
-    # Extraction du nom de service et de la méthode depuis "method"
-    full_method = data['method']
-    parts = full_method.split('.')
-    if len(parts) != 2:
-        return jsonify({"error": "Le format du champ 'method' doit être 'service.method'"}), 400
 
-    service = parts[0]      # Exemple : 'documents'
-    method = parts[1]       # Exemple : 'upload'
-    kwargs = {k: v for k, v in data.items() if k not in ['method']}
+# Test AuthentificationService
+auth_service = AuthentificationService()
+response, status_code = auth_service.auth(token)
+print("Réponse de l'authentification :", response)
+print("Code de statut :", status_code)
 
-    # Exécution de la méthode du service
-    result = manager.execute_service_method(service, method, kwargs)
+# Test AdminService
+admin_service = AdminService()
+admin_response = admin_service.create_user(username="test", password="test", role="user", token=token)
+print("Réponse du service admin :", admin_response)
+admin_response  = admin_service.list_users(token=token)
+print("Réponse du service admin :", admin_response)
 
-    if result is None:
-        return jsonify({"error": "Le service ou la méthode spécifiée est introuvable"}), 404
 
-    # Retourne le résultat sous forme de JSON
-    return jsonify({"result": result})
+# Test SystemSettingsService
+system_settings_service = SystemSettingsService()
+settings_response = system_settings_service.get_system_settings(token=token)
+print("Réponse du service system settings :", settings_response)
+

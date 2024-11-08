@@ -8,16 +8,15 @@ class AuthentificationService:
     def __init__(self):
         load_dotenv()
         self.base_url = os.getenv("BASE_URL")
-        print(f"AuthentificationService initialisé sur l'url {self.base_url}")
 
-    def auth(self, **kwargs):
-        token = kwargs.get("Authorization")
+    def auth(self, token):
         if not token:
             return {"error": "No authorization token provided."}, 403
 
-        headers = {"Authorization": token}
+        url = f"{self.base_url}/v1/auth"
+        headers = {"Authorization": f"Bearer {token}"}
         try:
-            response = requests.get(self.base_url, headers=headers)
+            response = requests.get(url, headers=headers)
             response.raise_for_status()
             return response.json(), response.status_code
         
@@ -28,3 +27,4 @@ class AuthentificationService:
         
         except requests.exceptions.RequestException as e:
             return {"error": "Failed to connect to the authentication service"}, 500
+

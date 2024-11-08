@@ -8,19 +8,18 @@ class DocumentService:
         load_dotenv()
         self.auth_service = auth_service or AuthentificationService()
         self.base_url = os.getenv("BASE_URL")
-        print("DocumentService initialisé")
 
     def upload_file(self, file_path, token):
         """
         POST /v1/document/upload
         Upload un nouveau fichier pour être parsé et préparé pour embedding.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/document/upload"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
         files = {'file': open(file_path, 'rb')}
         
         try:
@@ -35,12 +34,12 @@ class DocumentService:
         POST /v1/document/upload-link
         Upload un lien valide pour être scrappé et préparé pour embedding.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/document/upload-link"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
         json_data = {"link": link}
 
         try:
@@ -55,12 +54,12 @@ class DocumentService:
         POST /v1/document/raw-text
         Upload de texte brut avec des métadonnées sans nécessiter de fichier.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/document/raw-text"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
         json_data = {
             "textContent": text_content,
             "metadata": metadata
@@ -78,12 +77,12 @@ class DocumentService:
         GET /v1/documents
         Obtenir la liste de tous les documents stockés localement.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/documents"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
 
         try:
             response = requests.get(url, headers=headers)
@@ -97,12 +96,12 @@ class DocumentService:
         GET /v1/document/accepted-file-types
         Obtenir les types de fichiers acceptés pour l'upload.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/document/accepted-file-types"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
 
         try:
             response = requests.get(url, headers=headers)
@@ -116,12 +115,12 @@ class DocumentService:
         GET /v1/document/metadata-schema
         Récupère le schéma des métadonnées pour les uploads de texte brut.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/document/metadata-schema"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
         
         try:
             response = requests.get(url, headers=headers)
@@ -135,12 +134,12 @@ class DocumentService:
         GET /v1/document/{docName}
         Récupère un document par son nom unique.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/document/{doc_name}"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
         
         try:
             response = requests.get(url, headers=headers)
@@ -154,12 +153,12 @@ class DocumentService:
         POST /v1/document/create-folder
         Crée un nouveau dossier dans le répertoire de stockage des documents.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/document/create-folder"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
         json_data = {"name": folder_name}
 
         try:
@@ -176,12 +175,12 @@ class DocumentService:
         
         :param files_to_move: Liste de dictionnaires contenant les chemins 'from' et 'to' de chaque fichier.
         """
-        auth_response, status_code = self.auth_service.auth(Authorization=token)
+        auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/document/move-files"
-        headers = {"Authorization": token}
+        headers = {"Authorization": f"Bearer {token}"}
         json_data = {"files": files_to_move}
 
         try:
