@@ -9,6 +9,25 @@ class AdminService:
         self.auth_service = auth_service or AuthentificationService()
         self.base_url = os.getenv("BASE_URL")
 
+    def handle_request(self, method, url, token, **kwargs):
+        """
+        Gère les requêtes HTTP pour les méthodes du service.
+        """
+        headers = {"Authorization": f"Bearer {token}"}
+        try:
+            response = requests.request(method, url, headers=headers, **kwargs)
+            response.raise_for_status()
+            return response.json(), response.status_code
+        except requests.exceptions.HTTPError as e:
+            try:
+                error_details = response.json()
+                error_message = error_details.get("message", str(error_details))
+            except ValueError:
+                error_message = response.text
+            return {"error": f"HTTP Error: {error_message}"}, response.status_code
+        except requests.exceptions.RequestException as e:
+            return {"error": f"Request failed: {str(e)}"}, 500
+
     def is_multi_user_mode(self, token):
         """
         GET /v1/admin/is-multi-user-mode
@@ -19,14 +38,7 @@ class AdminService:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/admin/is-multi-user-mode"
-        headers = {"Authorization": f"Bearer {token}"}
-
-        try:
-            response = requests.get(url, headers=headers)
-            response.raise_for_status()
-            return response.json(), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to check multi-user mode"}, 500
+        return self.handle_request("GET", url, token)
 
     def list_users(self, token):
         """
@@ -38,14 +50,7 @@ class AdminService:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/admin/users"
-        headers = {"Authorization": f"Bearer {token}"}
-
-        try:
-            response = requests.get(url, headers=headers)
-            response.raise_for_status()
-            return response.json(), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to list users"}, 500
+        return self.handle_request("GET", url, token)
 
     def create_user(self, username, password, role, token):
         """
@@ -57,19 +62,12 @@ class AdminService:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/admin/users/new"
-        headers = {"Authorization": f"Bearer {token}"}
         data = {
             "username": username,
             "password": password,
             "role": role
         }
-
-        try:
-            response = requests.post(url, json=data, headers=headers)
-            response.raise_for_status()
-            return response.json(), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to create user"}, 500
+        return self.handle_request("POST", url, token, json=data)
 
     def update_user(self, user_id, username=None, password=None, role=None, suspended=None, token=None):
         """
@@ -81,20 +79,13 @@ class AdminService:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/admin/users/{user_id}"
-        headers = {"Authorization": f"Bearer {token}"}
         data = {k: v for k, v in {
             "username": username,
             "password": password,
             "role": role,
             "suspended": suspended
         }.items() if v is not None}
-
-        try:
-            response = requests.post(url, json=data, headers=headers)
-            response.raise_for_status()
-            return response.json(), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to update user"}, 500
+        return self.handle_request("POST", url, token, json=data)
 
     def delete_user(self, user_id, token):
         """
@@ -106,14 +97,7 @@ class AdminService:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/admin/users/{user_id}"
-        headers = {"Authorization": f"Bearer {token}"}
-
-        try:
-            response = requests.delete(url, headers=headers)
-            response.raise_for_status()
-            return response.json(), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to delete user"}, 500
+        return self.handle_request("DELETE", url, token)
 
     def list_invites(self, token):
         """
@@ -125,14 +109,7 @@ class AdminService:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/admin/invites"
-        headers = {"Authorization": f"Bearer {token}"}
-
-        try:
-            response = requests.get(url, headers=headers)
-            response.raise_for_status()
-            return response.json(), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to list invites"}, 500
+        return self.handle_request("GET", url, token)
 
     def create_invite(self, workspace_ids, token):
         """
@@ -144,17 +121,8 @@ class AdminService:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/admin/invite/new"
-        headers = {"Authorization": f"Bearer {token}"}
-        data = {
-            "workspaceIds": workspace_ids
-        }
-
-        try:
-            response = requests.post(url, json=data, headers=headers)
-            response.raise_for_status()
-            return response.json(), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to create invite"}, 500
+        data = {"workspaceIds": workspace_ids}
+        return self.handle_request("POST", url, token, json=data)
 
     def deactivate_invite(self, invite_id, token):
         """
@@ -166,11 +134,4 @@ class AdminService:
             return auth_response, status_code
 
         url = f"{self.base_url}/v1/admin/invite/{invite_id}"
-        headers = {"Authorization": f"Bearer {token}"}
-
-        try:
-            response = requests.delete(url, headers=headers)
-            response.raise_for_status()
-            return response.json(), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to deactivate invite"}, 500
+        return self.handle_request("DELETE", url, token)
