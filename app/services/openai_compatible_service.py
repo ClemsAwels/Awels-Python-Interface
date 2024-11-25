@@ -16,7 +16,7 @@ class OpenAICompatibleService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/openai/models"
         headers = {"Authorization": f"Bearer {token}"}
@@ -25,8 +25,10 @@ class OpenAICompatibleService:
             response = requests.get(url, headers=headers)
             response.raise_for_status()
             return response.json(), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to retrieve models"}, 500
+        except requests.exceptions.HTTPError as http_err:
+            return {"error": "HTTP error occurred", "details": str(http_err)}, response.status_code
+        except requests.exceptions.RequestException as req_err:
+            return {"error": "Request exception occurred", "details": str(req_err)}, 500
 
     def chat_completions(self, model_slug, messages, token, stream=False, temperature=0.7):
         """
@@ -35,11 +37,11 @@ class OpenAICompatibleService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/openai/chat/completions"
-        headers = {"Authorization": token, "Content-Type": "application/json"}
-        payload = {
+        headers = {"Authorization": f"Bearer {token}"}
+        json_data = {
             "model": model_slug,
             "messages": messages,
             "stream": stream,
@@ -47,11 +49,13 @@ class OpenAICompatibleService:
         }
 
         try:
-            response = requests.post(url, headers=headers, json=payload)
+            response = requests.post(url, json=json_data, headers=headers)
             response.raise_for_status()
             return response.json(), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to complete chat"}, 500
+        except requests.exceptions.HTTPError as http_err:
+            return {"error": "HTTP error occurred", "details": str(http_err)}, response.status_code
+        except requests.exceptions.RequestException as req_err:
+            return {"error": "Request exception occurred", "details": str(req_err)}, 500
 
     def get_embeddings(self, input_texts, token, model=None):
         """
@@ -60,19 +64,21 @@ class OpenAICompatibleService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/openai/embeddings"
-        headers = {"Authorization": token, "Content-Type": "application/json"}
+        headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
         payload = {"input": input_texts, "model": model}
 
         try:
             response = requests.post(url, headers=headers, json=payload)
             response.raise_for_status()
             return response.json(), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to get embeddings"}, 500
-
+        except requests.exceptions.HTTPError as http_err:
+            return {"error": "HTTP error occurred", "details": str(http_err)}, response.status_code
+        except requests.exceptions.RequestException as req_err:
+            return {"error": "Request exception occurred", "details": str(req_err)}, 500
+            
     def list_vector_stores(self, token):
         """
         GET /v1/openai/vector_stores
@@ -80,7 +86,7 @@ class OpenAICompatibleService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/openai/vector_stores"
         headers = {"Authorization": f"Bearer {token}"}
@@ -89,5 +95,7 @@ class OpenAICompatibleService:
             response = requests.get(url, headers=headers)
             response.raise_for_status()
             return response.json(), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to list vector stores"}, 500
+        except requests.exceptions.HTTPError as http_err:
+            return {"error": "HTTP error occurred", "details": str(http_err)}, response.status_code
+        except requests.exceptions.RequestException as req_err:
+            return {"error": "Request exception occurred", "details": str(req_err)}, 500

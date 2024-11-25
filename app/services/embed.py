@@ -16,7 +16,7 @@ class EmbedService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/embed"
         headers = {"Authorization": f"Bearer {token}"}
@@ -25,8 +25,10 @@ class EmbedService:
             response = requests.get(url, headers=headers)
             response.raise_for_status()
             return response.json(), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to list embeds"}, 500
+        except requests.exceptions.HTTPError as http_err:
+            return {"error": "HTTP error occurred", "details": str(http_err)}, response.status_code
+        except requests.exceptions.RequestException as req_err:
+            return {"error": "Request exception occurred", "details": str(req_err)}, 500
 
     def get_chats_for_embed(self, embed_uuid, token):
         """
@@ -35,7 +37,7 @@ class EmbedService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/embed/{embed_uuid}/chats"
         headers = {"Authorization": f"Bearer {token}"}
@@ -44,8 +46,10 @@ class EmbedService:
             response = requests.get(url, headers=headers)
             response.raise_for_status()
             return response.json(), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to get chats for embed"}, 500
+        except requests.exceptions.HTTPError as http_err:
+            return {"error": "HTTP error occurred", "details": str(http_err)}, response.status_code
+        except requests.exceptions.RequestException as req_err:
+            return {"error": "Request exception occurred", "details": str(req_err)}, 500
 
     def get_chats_for_embed_session(self, embed_uuid, session_uuid, token):
         """
@@ -54,7 +58,7 @@ class EmbedService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/embed/{embed_uuid}/chats/{session_uuid}"
         headers = {"Authorization": f"Bearer {token}"}
@@ -63,5 +67,7 @@ class EmbedService:
             response = requests.get(url, headers=headers)
             response.raise_for_status()
             return response.json(), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to get chats for embed session"}, 500
+        except requests.exceptions.HTTPError as http_err:
+            return {"error": "HTTP error occurred", "details": str(http_err)}, response.status_code
+        except requests.exceptions.RequestException as req_err:
+            return {"error": "Request exception occurred", "details": str(req_err)}, 500

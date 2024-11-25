@@ -16,7 +16,7 @@ class UserManagementService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/users"
         headers = {"Authorization": f"Bearer {token}"}
@@ -25,6 +25,7 @@ class UserManagementService:
             response = requests.get(url, headers=headers)
             response.raise_for_status()
             return response.json(), response.status_code
-        except requests.exceptions.RequestException as e:
-            print(f"Erreur de requête : {e}")
-            return {"error": "Failed to list users"}, 500
+        except requests.exceptions.HTTPError as http_err:
+            return {"error": "HTTP error occurred", "details": str(http_err)}, response.status_code
+        except requests.exceptions.RequestException as req_err:
+            return {"error": "Request exception occurred", "details": str(req_err)}, 500

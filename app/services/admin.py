@@ -35,7 +35,7 @@ class AdminService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/admin/is-multi-user-mode"
         return self.handle_request("GET", url, token)
@@ -47,7 +47,7 @@ class AdminService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/admin/users"
         return self.handle_request("GET", url, token)
@@ -59,7 +59,7 @@ class AdminService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/admin/users/new"
         data = {
@@ -76,7 +76,7 @@ class AdminService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/admin/users/{user_id}"
         data = {k: v for k, v in {
@@ -94,7 +94,7 @@ class AdminService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/admin/users/{user_id}"
         return self.handle_request("DELETE", url, token)
@@ -106,7 +106,7 @@ class AdminService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/admin/invites"
         return self.handle_request("GET", url, token)
@@ -118,7 +118,7 @@ class AdminService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/admin/invite/new"
         data = {"workspaceIds": workspace_ids}
@@ -131,7 +131,7 @@ class AdminService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/admin/invite/{invite_id}"
         return self.handle_request("DELETE", url, token)

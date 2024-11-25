@@ -6,7 +6,7 @@ class AuthentificationService:
     def __init__(self):
         load_dotenv()
         self.base_url = os.getenv("BASE_URL")
-        self.ssl_verify = os.getenv("SSL_VERIFY", "true").lower() == "true" # Charger SSL_VERIFY depuis les variables d'environnement
+        self.ssl_verify = os.getenv("SSL_VERIFY", "true").lower() == "true"  # Charger SSL_VERIFY depuis les variables d'environnement
         print(f"AuthentificationService initialisé sur l'url {self.base_url} avec SSL_VERIFY={self.ssl_verify}")
 
     def auth(self, **kwargs):
@@ -35,7 +35,7 @@ class AuthentificationService:
 
             if response.status_code == 403:
                 return {"error": f"Invalid API Key: {error_message}"}, 403
-            return {"error": f"Authentication service error: {error_message}"}, 500
+            return {"error": f"Authentication service error: {error_message}"}, response.status_code
 
         except requests.exceptions.RequestException as e:
             return {"error": f"Failed to connect to the authentication service: {str(e)}"}, 500

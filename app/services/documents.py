@@ -35,7 +35,7 @@ class DocumentService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/document/upload"
         files = {'file': open(file_path, 'rb')}
@@ -54,7 +54,7 @@ class DocumentService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/document/upload-link"
         json_data = {"link": link}
@@ -67,7 +67,7 @@ class DocumentService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/document/raw-text"
         json_data = {
@@ -83,7 +83,7 @@ class DocumentService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/documents"
         return self.handle_request("GET", url, token)
@@ -95,7 +95,7 @@ class DocumentService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/document/accepted-file-types"
         return self.handle_request("GET", url, token)
@@ -107,7 +107,7 @@ class DocumentService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/document/metadata-schema"
         return self.handle_request("GET", url, token)
@@ -119,7 +119,7 @@ class DocumentService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/document/{doc_name}"
         return self.handle_request("GET", url, token)
@@ -131,7 +131,7 @@ class DocumentService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/document/create-folder"
         json_data = {"name": folder_name}
@@ -146,7 +146,7 @@ class DocumentService:
         """
         auth_response, status_code = self.auth_service.auth(token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/document/move-files"
         json_data = {"files": files_to_move}
