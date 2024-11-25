@@ -33,7 +33,7 @@ class DocumentService:
         POST /v1/document/upload
         Upload un nouveau fichier pour être parsé et préparé pour embedding.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
@@ -52,7 +52,7 @@ class DocumentService:
         POST /v1/document/upload-link
         Upload un lien valide pour être scrappé et préparé pour embedding.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
@@ -65,7 +65,7 @@ class DocumentService:
         POST /v1/document/raw-text
         Upload de texte brut avec des métadonnées sans nécessiter de fichier.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
@@ -81,7 +81,7 @@ class DocumentService:
         GET /v1/documents
         Obtenir la liste de tous les documents stockés localement.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
@@ -93,7 +93,7 @@ class DocumentService:
         GET /v1/document/accepted-file-types
         Obtenir les types de fichiers acceptés pour l'upload.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
@@ -105,7 +105,7 @@ class DocumentService:
         GET /v1/document/metadata-schema
         Récupère le schéma des métadonnées pour les uploads de texte brut.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
@@ -117,7 +117,7 @@ class DocumentService:
         GET /v1/document/{docName}
         Récupère un document par son nom unique.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
@@ -129,7 +129,7 @@ class DocumentService:
         POST /v1/document/create-folder
         Crée un nouveau dossier dans le répertoire de stockage des documents.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
@@ -144,7 +144,7 @@ class DocumentService:
         
         :param files_to_move: Liste de dictionnaires contenant les chemins 'from' et 'to' de chaque fichier.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 

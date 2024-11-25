@@ -14,7 +14,7 @@ class EmbedService:
         GET /v1/embed
         Récupère la liste de tous les embeds actifs.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
@@ -35,7 +35,7 @@ class EmbedService:
         GET /v1/embed/{embedUuid}/chats
         Récupère toutes les conversations pour un embed spécifique.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
@@ -56,7 +56,7 @@ class EmbedService:
         GET /v1/embed/{embedUuid}/chats/{sessionUuid}
         Récupère les conversations pour un embed et une session spécifiques.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 

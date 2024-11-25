@@ -14,7 +14,7 @@ class OpenAICompatibleService:
         GET /v1/openai/models
         Récupère tous les modèles disponibles (workspaces pour le chat).
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
@@ -35,7 +35,7 @@ class OpenAICompatibleService:
         POST /v1/openai/chat/completions
         Exécute une conversation avec un workspace en mode compatibilité OpenAI.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
@@ -62,7 +62,7 @@ class OpenAICompatibleService:
         POST /v1/openai/embeddings
         Obtenir les embeddings d'un ou plusieurs textes.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
@@ -84,7 +84,7 @@ class OpenAICompatibleService:
         GET /v1/openai/vector_stores
         Liste toutes les collections de bases de données vectorielles connectées.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 

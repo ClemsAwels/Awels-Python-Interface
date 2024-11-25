@@ -14,7 +14,7 @@ class UserManagementService:
         GET /v1/users
         Récupère la liste de tous les utilisateurs.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 

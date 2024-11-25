@@ -7,13 +7,16 @@ class AuthentificationService:
         load_dotenv()
         self.base_url = os.getenv("BASE_URL")
         self.ssl_verify = os.getenv("SSL_VERIFY", "true").lower() == "true"  # Charger SSL_VERIFY depuis les variables d'environnement
-        print(f"AuthentificationService initialisé sur l'url {self.base_url} avec SSL_VERIFY={self.ssl_verify}")
 
     def auth(self, **kwargs):
         token = kwargs.get("Authorization")
         if not token:
             return {"error": "No authorization token provided."}, 403
-
+        
+        # Ajouter "Bearer " devant le token s'il n'est pas déjà présent
+        if not token.startswith("Bearer "):
+            token = f"Bearer {token}"
+        
         url = f"{self.base_url}/v1/auth"
         headers = {"Authorization": token}
 

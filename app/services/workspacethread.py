@@ -14,13 +14,13 @@ class WorkspaceThreadService:
         POST /v1/workspace/{slug}/thread/new
         Crée un nouveau thread dans l'espace de travail.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/workspace/{slug}/thread/new"
         headers = {
-            "Authorization": token,
+            "Authorization": f"Bearer {token}",
             "Content-Type": "application/json"
         }
         data = {"userId": user_id} if user_id else {}
@@ -29,21 +29,23 @@ class WorkspaceThreadService:
             response = requests.post(url, headers=headers, json=data)
             response.raise_for_status()
             return response.json(), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to create thread"}, 500
+        except requests.exceptions.HTTPError as http_err:
+            return {"error": "HTTP error occurred", "details": str(http_err)}, response.status_code
+        except requests.exceptions.RequestException as req_err:
+            return {"error": "Request exception occurred", "details": str(req_err)}, 500
 
     def update_thread(self, slug, thread_slug, new_name, token):
         """
         POST /v1/workspace/{slug}/thread/{threadSlug}/update
         Met à jour le nom d'un thread dans un espace de travail.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/workspace/{slug}/thread/{thread_slug}/update"
         headers = {
-            "Authorization": token,
+            "Authorization": f"Bearer {token}",
             "Content-Type": "application/json"
         }
         data = {"name": new_name}
@@ -52,17 +54,19 @@ class WorkspaceThreadService:
             response = requests.post(url, headers=headers, json=data)
             response.raise_for_status()
             return response.json(), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to update thread name"}, 500
+        except requests.exceptions.HTTPError as http_err:
+            return {"error": "HTTP error occurred", "details": str(http_err)}, response.status_code
+        except requests.exceptions.RequestException as req_err:
+            return {"error": "Request exception occurred", "details": str(req_err)}, 500
 
     def delete_thread(self, slug, thread_slug, token):
         """
         DELETE /v1/workspace/{slug}/thread/{threadSlug}
         Supprime un thread d'un espace de travail.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/workspace/{slug}/thread/{thread_slug}"
         headers = {"Authorization": f"Bearer {token}"}
@@ -70,18 +74,20 @@ class WorkspaceThreadService:
         try:
             response = requests.delete(url, headers=headers)
             response.raise_for_status()
-            return response.json(), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to delete thread"}, 500
+            return {"message": "Thread deleted successfully"}, response.status_code
+        except requests.exceptions.HTTPError as http_err:
+            return {"error": "HTTP error occurred", "details": str(http_err)}, response.status_code
+        except requests.exceptions.RequestException as req_err:
+            return {"error": "Request exception occurred", "details": str(req_err)}, 500
 
     def get_thread_chats(self, slug, thread_slug, token):
         """
         GET /v1/workspace/{slug}/thread/{threadSlug}/chats
         Récupère les chats d'un thread dans un espace de travail.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/workspace/{slug}/thread/{thread_slug}/chats"
         headers = {"Authorization": f"Bearer {token}"}
@@ -90,21 +96,23 @@ class WorkspaceThreadService:
             response = requests.get(url, headers=headers)
             response.raise_for_status()
             return response.json(), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to get thread chats"}, 500
+        except requests.exceptions.HTTPError as http_err:
+            return {"error": "HTTP error occurred", "details": str(http_err)}, response.status_code
+        except requests.exceptions.RequestException as req_err:
+            return {"error": "Request exception occurred", "details": str(req_err)}, 500
 
     def chat_with_thread(self, slug, thread_slug, message, mode, user_id, token):
         """
         POST /v1/workspace/{slug}/thread/{threadSlug}/chat
         Envoie un message pour converser avec un thread dans un espace de travail.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/workspace/{slug}/thread/{thread_slug}/chat"
         headers = {
-            "Authorization": token,
+            "Authorization": f"Bearer {token}",
             "Content-Type": "application/json"
         }
         data = {
@@ -117,21 +125,23 @@ class WorkspaceThreadService:
             response = requests.post(url, headers=headers, json=data)
             response.raise_for_status()
             return response.json(), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to chat with thread"}, 500
+        except requests.exceptions.HTTPError as http_err:
+            return {"error": "HTTP error occurred", "details": str(http_err)}, response.status_code
+        except requests.exceptions.RequestException as req_err:
+            return {"error": "Request exception occurred", "details": str(req_err)}, 500
 
     def stream_chat_with_thread(self, slug, thread_slug, message, mode, user_id, token):
         """
         POST /v1/workspace/{slug}/thread/{threadSlug}/stream-chat
         Envoie un message en mode chat en continu avec un thread dans un espace de travail.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
-            return auth_response, status_code
+            return {"error": "Authentication failed", "details": auth_response}, status_code
 
         url = f"{self.base_url}/v1/workspace/{slug}/thread/{thread_slug}/stream-chat"
         headers = {
-            "Authorization": token,
+            "Authorization": f"Bearer {token}",
             "Content-Type": "application/json"
         }
         data = {
@@ -144,5 +154,7 @@ class WorkspaceThreadService:
             response = requests.post(url, headers=headers, json=data, stream=True)
             response.raise_for_status()
             return response.iter_lines(decode_unicode=True), response.status_code
-        except requests.exceptions.RequestException:
-            return {"error": "Failed to stream chat with thread"}, 500
+        except requests.exceptions.HTTPError as http_err:
+            return {"error": "HTTP error occurred", "details": str(http_err)}, response.status_code
+        except requests.exceptions.RequestException as req_err:
+            return {"error": "Request exception occurred", "details": str(req_err)}, 500

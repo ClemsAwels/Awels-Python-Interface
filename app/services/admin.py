@@ -33,7 +33,7 @@ class AdminService:
         GET /v1/admin/is-multi-user-mode
         Vérifie si l'instance est en mode multi-utilisateur.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
@@ -45,7 +45,7 @@ class AdminService:
         GET /v1/admin/users
         Récupère la liste de tous les utilisateurs en mode multi-utilisateur.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
@@ -57,7 +57,7 @@ class AdminService:
         POST /v1/admin/users/new
         Crée un nouvel utilisateur avec un nom d'utilisateur, un mot de passe et un rôle.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
@@ -74,7 +74,7 @@ class AdminService:
         POST /v1/admin/users/{id}
         Met à jour les informations d'un utilisateur spécifique.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
@@ -92,7 +92,7 @@ class AdminService:
         DELETE /v1/admin/users/{id}
         Supprime un utilisateur par son identifiant.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
@@ -104,7 +104,7 @@ class AdminService:
         GET /v1/admin/invites
         Liste toutes les invitations existantes.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
@@ -116,7 +116,7 @@ class AdminService:
         POST /v1/admin/invite/new
         Crée une nouvelle invitation pour enregistrer un utilisateur dans l'instance.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
@@ -129,7 +129,7 @@ class AdminService:
         DELETE /v1/admin/invite/{id}
         Désactive une invitation par son identifiant.
         """
-        auth_response, status_code = self.auth_service.auth(token)
+        auth_response, status_code = self.auth_service.auth(Authorization=token)
         if status_code != 200:
             return {"error": "Authentication failed", "details": auth_response}, status_code
 
